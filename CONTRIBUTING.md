@@ -1,25 +1,26 @@
-Branch protection & CI requirements
-=================================
+Contributing to Pro PDF
+======================
 
-Recommended branch protection rules (apply in GitHub repository Settings → Branches):
+Thanks for contributing! This file contains quick guidelines to make contributions smooth.
 
-- Protect the default branch (e.g. `ci/pin-httpx-email-validator`).
-- Require status checks to pass before merging. Add the following checks:
-  - `test (ubuntu-latest, python 3.11)` (job `test` for Python 3.11)
-  - `test (ubuntu-latest, python 3.10)` (job `test` for Python 3.10)
-- Require pull request reviews before merging (1 or 2 approvers).
-- Optionally require signed commits and linear history.
+Getting started
+- Create an issue to discuss larger changes before implementing.
+- Fork the repo and create a branch with a descriptive name: `feature/xxx` or `fix/yyy`.
 
-Apply rules via GitHub UI or `gh` CLI:
+Code style and tests
+- Follow the existing code style (Black/Flake8 where configured).
+- Add tests for new behavior and run `pytest` locally.
+- Install dev hooks: `python -m pip install --user pre-commit && pre-commit install`.
 
-```bash
-# protect branch via gh (requires repo admin)
-gh api -X PUT \
-  -H "Accept: application/vnd.github+json" \
-  /repos/:owner/:repo/branches/:branch/protection \
-  -f required_status_checks.contexts='["test (ubuntu-latest, python 3.11)", "test (ubuntu-latest, python 3.10)"]' \
-  -f required_pull_request_reviews.dismiss_stale_reviews=false \
-  -f enforce_admins=true
-```
+Database migrations
+- If you change models, generate an Alembic revision: `make alembic-rev NAME="desc"`.
+- Review the generated migration under `backend/alembic/versions/` and commit it with your change.
+- CI will fail if models change without committed migrations.
 
-Note: replace `:owner`, `:repo`, and `:branch` with your repository owner, name, and target branch. Running the above requires an admin token.
+PR process
+- Open a pull request from your branch to the main branch.
+- CI runs tests and migration checks; address failures before merge.
+- Request at least one reviewer and squash/merge when approved.
+
+Security
+- Do not commit secrets. Use environment variables and secrets in CI.

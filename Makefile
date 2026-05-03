@@ -26,3 +26,7 @@ alembic-rev:
 t	# ensure backend package is importable
 t	python -m pip install -e backend
 t	alembic -c backend/alembic.ini revision --autogenerate -m "${NAME}"
+seed-plans:
+	python -m pip install -r backend/requirements.txt
+	python -m pip install -e backend
+	python backend/scripts/seed_plans.py

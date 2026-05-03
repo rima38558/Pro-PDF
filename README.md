@@ -1,9 +1,6 @@
 Pro PDF — dev README
 =====================
 
-[![Codecov](https://codecov.io/gh/rima38558/Pro-PDF/branch/ci/add-github-actions/graph/badge.svg)](https://codecov.io/gh/rima38558/Pro-PDF)
-[![Coveralls](https://coveralls.io/repos/github/rima38558/Pro-PDF/badge.svg?branch=ci/add-github-actions)](https://coveralls.io/github/rima38558/Pro-PDF)
-
 This repository contains a FastAPI backend with Celery workers for PDF processing and a docker-compose setup for local development.
 
 Quick start (Linux/macOS/Windows with Docker):
@@ -103,4 +100,21 @@ Development fallback
 If `SENDGRID_API_KEY` is not set, the app will write outgoing emails to `./backend/data/emails` as JSON files. This makes local testing safe and visible without sending external emails.
 
 To enable SendGrid for real delivery, configure `SENDGRID_API_KEY` and set `EMAIL_FROM`/`APP_URL` accordingly.
+
+MinIO (local S3-compatible storage)
+----------------------------------
+
+A MinIO service is included in `docker-compose.yml` for local testing. To use S3-compatible storage locally:
+
+1. Start the stack: `docker-compose up --build` (MinIO runs on `http://localhost:9000`, console at `http://localhost:9001`).
+2. The compose file sets `USE_S3=true` and configures the backend to use MinIO credentials by default.
+3. The backend `entrypoint.sh` will ensure the configured bucket (default `pro-pdf-bucket`) exists.
+
+Environment variables used by storage:
+- `USE_S3=true` — enable S3 mode
+- `S3_ENDPOINT_URL` or `S3_ENDPOINT` — S3/MinIO endpoint (e.g., `http://minio:9000`)
+- `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` — credentials for S3/MinIO
+- `S3_BUCKET` — bucket name to use
+
+For production, point these variables at your real S3 provider and set `USE_S3=true`.
 

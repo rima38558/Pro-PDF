@@ -1,6 +1,8 @@
 Pro PDF — dev README
 =====================
 
+[![Coverage](https://codecov.io/gh/rima38558/Pro-PDF/branch/ci/add-github-actions/graph/badge.svg)](https://codecov.io/gh/rima38558/Pro-PDF)
+
 This repository contains a FastAPI backend with Celery workers for PDF processing and a docker-compose setup for local development.
 
 Quick start (Linux/macOS/Windows with Docker):

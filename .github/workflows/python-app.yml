@@ -85,9 +85,11 @@ jobs:
           DATABASE_URL: postgresql://test:test@localhost:5432/test_db
           REDIS_URL: redis://localhost:6379/0
         run: |
-          python -m pip install pytest-cov
+          python -m pip install --upgrade pip
+          python -m pip install coverage coveralls pytest
           mkdir -p reports
-          python -m pytest --junitxml=reports/junit.xml --cov=backend --cov-report=xml:reports/coverage.xml -q
+          coverage run -m pytest --junitxml=reports/junit.xml -q
+          coverage xml -o reports/coverage.xml
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
@@ -101,3 +103,10 @@ jobs:
           files: reports/coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
+
+      - name: Upload coverage to Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: |
+          python -m pip install coveralls
+          python -m coveralls
